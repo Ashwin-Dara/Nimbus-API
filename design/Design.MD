@@ -53,7 +53,7 @@ flowchart LR;
 encs([core/files/encryptions])
 compress([core/files/compressions])
 core([/core]) --> files([/core/files])
-pub([core/pub])
+pub([core/rsa])
 core --> pub
 files --> encs 
 files --> compress

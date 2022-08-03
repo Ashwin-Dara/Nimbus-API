@@ -1,6 +1,6 @@
 const crypto = require("crypto");
-const fs = require("fs");
 const bigintCryptoUtils = require("bigint-crypto-utils");
+const fs = require("fs");
 const path = require("path");
 
 /** Extended GCD algorithm for determining whether or not the current public key

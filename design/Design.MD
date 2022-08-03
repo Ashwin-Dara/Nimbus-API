@@ -44,6 +44,39 @@ The main algorithm that you will be using is the Huffman coding algorithm. You s
 ### Huffman Coding Algorithm 
 Here is an implementation of the Huffman coding algorithm. 
 
+Intuitively, the way that Huffman coding works is that characters with higher frequencies within the string should have less bits to represent them while characters with low frequencies can be represented using a higher number of bits. 
+
+Let's take string MISSISSIPPI RIVER. What we want to first do is figure out the frequency of each letter and then sort them. 
+
+```
+I-5 S-4 P-2 R-2 M-1 V-1 E-1 _-1
+```
+
+Now, we want to form trees by continously combining the nodes with the lowest two frequencies. Here is the first combine: 
+```
+                          E_-2 (new node)
+                          |   |
+I-5 S-4 P-2 R-2 M-1 V-1  E-1 _-1
+```
+
+Here is the second: 
+```
+                MV-2     E_-2 
+                |   |    |  |
+I-5 S-4 P-2 R-2 M-1 V-1  E-1 _-1
+```
+Continue doing this until we get a new tree. The root of the tree should contain the total number of characters in the original string. In this example, it will be 17. 
+
+After forming the complete tree, we can get new bit representations for the original letters. Letters are that more frequent have fewer number of bits. Traversing the tree to the left adds a "0" to the bitstring and traversing to the right adds a "1" to the bitstring. One important thing to note is that we need to actually store the mapping that we get later on somewhere so that we are able to decode the original message. 
+
+The algorithm for Huffman coding is on Geeks for Geeks: https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/. 
+
+Here are some notes:
+- Characters are represented through 8 bytes. 
+- You will need to append 0's to the file to make it perfectly 8 bytes. To do this, append in the very beginning. Figure this out by parsing through the file, figuring out the size, and then taking mod 8. 
+- You need to store the encoding map somewhere.
+
+
 ## Authentication 
 
 
@@ -52,10 +85,15 @@ Here is an implementation of the Huffman coding algorithm.
 flowchart LR; 
 encs([core/files/encryptions])
 compress([core/files/compressions])
-core([/core]) --> files([/core/files])
+maps([core/encodings])
+
+core([/core]) --> files([core/files])
 pub([core/rsa])
+
 core --> pub
 files --> encs 
 files --> compress
 pub --> keys[[keys.json]]
+core --> maps
 ```
+- **encodings**: will contain the compressed version of the files, and the appropriate mapping. Compress versions of files will have the new name `<org. name> + _$compressed.bin`. You will need to store the encoding map.

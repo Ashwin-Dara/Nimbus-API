@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const bigintCryptoUtils = require("bigint-crypto-utils");
 const fs = require("fs");
 const path = require("path");
+const { Console } = require("console");
 
 /** Extended GCD algorithm for determining whether or not the current public key
  * meets the appropriate requirements. In particular, we test for if there exists a modular
@@ -64,4 +65,30 @@ function writeRSAKeys() {
   );
 }
 
-writeRSAKeys();
+/** 
+ * @param filePath : file path of the file that you want to encrypt 
+ * @param encryptionPath : path of the JSON file that contains relevant encryption information (pub/priv keys)
+ * This function will encrypt the specified file with the inputted encryption scheme. */
+function encryptFile(filePath, encryptionPath, outputPath = "./") {
+  binary = fs.readFileSync(filePath);
+
+  /* Retrieving relevant keys for the RSA encryption. */
+  const rsaData = fs.readFileSync(encryptionPath);
+  const rsaDataJSON = JSON.parse(rsaData);
+  const rsaN = rsaDataJSON["public-key-JSON"]
+  
+  /* Clearing the original file (deleting previous data). */
+  fs.writeFileSync(outputPath, "");
+
+  /* Writing to the specified file */
+  for (let pair of binary.entries()) {
+    fs.appendFile(outputPath, pair[1].toString() + " ", () => {});  
+  }
+  console.log("Successfully wrote binary to the specified path:", outputPath)
+}
+
+
+exports.generateRSAKeys = generateRSAKeys; 
+exports.extendedGCD = extendedGCD; 
+exports.writeRSAKeys = writeRSAKeys; 
+exports.encryptFile = encryptFile; 

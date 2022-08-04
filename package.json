@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "bigint-crypto-utils": "^3.0.24",
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "paralleljs": "^1.1.0"
   }
 }

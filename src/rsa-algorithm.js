@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const bigintCryptoUtils = require("bigint-crypto-utils");
 const fs = require("fs");
 const path = require("path");
-const { Console } = require("console");
+const Parallel = require('paralleljs')
 
 /** Extended GCD algorithm for determining whether or not the current public key
  * meets the appropriate requirements. In particular, we test for if there exists a modular
@@ -26,11 +26,11 @@ function generateRSAKeys() {
   let publicN, publicE;
   while (privateKey == undefined) {
     /* Generating primes used for the public key (N, e). */
-    let primeP = crypto.generatePrimeSync(128, { bigint: true });
-    let primeQ = crypto.generatePrimeSync(128, { bigint: true });
+    let primeP = crypto.generatePrimeSync(5, { bigint: true });
+    let primeQ = crypto.generatePrimeSync(5, { bigint: true });
     let phiN = (primeP - BigInt(1)) * (primeQ - BigInt(1));
     publicN = BigInt(primeP * primeQ);
-    publicE = BigInt(7);
+    publicE = BigInt(3);
 
     /* Generating primes used for the public key (N, e).
      * Catching the exception in the case that the publicE does not produce a valid private key.
@@ -54,13 +54,14 @@ function writeRSAKeys() {
   let rsaData = JSON.stringify(generateRSAKeys(), null, 2);
   console.log("RSA Data: ", rsaData);
   // Async file write.
-  fs.appendFile(
+  fs.writeFile(
     path.join("./", "core", "rsa", "rsa-info.json"),
     rsaData,
     (err, data) => {
       if (err) {
         console.log(err);
       }
+      console.log("Wrote RSA Keys")
     }
   );
 }
@@ -75,20 +76,49 @@ function encryptFile(filePath, encryptionPath, outputPath = "./") {
   /* Retrieving relevant keys for the RSA encryption. */
   const rsaData = fs.readFileSync(encryptionPath);
   const rsaDataJSON = JSON.parse(rsaData);
-  const rsaN = rsaDataJSON["public-key-JSON"]
+  const rsaN = BigInt(rsaDataJSON["public-key-N"]);
+  const rsaE = BigInt(rsaDataJSON["public-key-E"]);
   
   /* Clearing the original file (deleting previous data). */
   fs.writeFileSync(outputPath, "");
 
   /* Writing to the specified file */
   for (let pair of binary.entries()) {
-    fs.appendFile(outputPath, pair[1].toString() + " ", () => {});  
+    let x = BigInt(pair[1]) ** rsaE; 
+    x = x % rsaN; 
+    fs.appendFileSync(outputPath, x.toString() + " ", () => {console.log("Original Binary:", pair[1], "Encrypted:", x)});  
   }
-  console.log("Successfully wrote binary to the specified path:", outputPath)
+  console.log("Successfully wrote binary to the specified path:", outputPath);
 }
 
+
+/** Decrypts the specified file and writes the decrypted contents into the provided
+ * outputPath. Read more: https://geshan.com.np/blog/2021/10/nodejs-read-file-line-by-line/
+ */
+function decryptFile(filePath, encryptionPath, outputPath = "./") {
+  binary = fs.readFileSync(filePath);
+
+  const rsaJSON = JSON.parse(fs.readFileSync(encryptionPath));
+  const rsaPrivateKey = BigInt(rsaJSON["private-key"]);
+  const rsaN = BigInt(rsaJSON["public-key-N"]);
+
+  console.log("Private Key:", rsaPrivateKey);
+  fs.writeFileSync(outputPath, "");
+
+  for (let i of binary.entries()) {
+    let d = BigInt(i[1])
+    for (let i = 0; i < (rsaPrivateKey - BigInt(1)); i += 1) {
+      d = d*d
+      d = d % rsaN;
+    }
+    d = d % rsaN
+
+    fs.appendFile(outputPath, d.toString(), () => {console.log("decrypting")});
+  }
+}
 
 exports.generateRSAKeys = generateRSAKeys; 
 exports.extendedGCD = extendedGCD; 
 exports.writeRSAKeys = writeRSAKeys; 
 exports.encryptFile = encryptFile; 
+exports.decryptFile = decryptFile;

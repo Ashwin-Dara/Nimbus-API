@@ -26,8 +26,8 @@ function generateRSAKeys() {
   let publicN, publicE;
   while (privateKey == undefined) {
     /* Generating primes used for the public key (N, e). */
-    let primeP = crypto.generatePrimeSync(5, { bigint: true });
-    let primeQ = crypto.generatePrimeSync(5, { bigint: true });
+    let primeP = crypto.generatePrimeSync(8, { bigint: true });
+    let primeQ = crypto.generatePrimeSync(8, { bigint: true });
     let phiN = (primeP - BigInt(1)) * (primeQ - BigInt(1));
     publicN = BigInt(primeP * primeQ);
     publicE = BigInt(3);
@@ -85,38 +85,60 @@ function encryptFile(filePath, encryptionPath, outputPath = "./") {
   /* Writing to the specified file */
   for (let pair of binary.entries()) {
     let x = BigInt(pair[1]) ** rsaE; 
+    console.log("X value", x)
     x = x % rsaN; 
-    fs.appendFileSync(outputPath, x.toString() + " ", () => {console.log("Original Binary:", pair[1], "Encrypted:", x)});  
+    fs.appendFileSync(outputPath, x.toString() + " ", () => {});  
+    console.log("Original Binary:", pair[1], "Encrypted:", x)
   }
   console.log("Successfully wrote binary to the specified path:", outputPath);
 }
 
+function specialPow(x, exp, N) {
+  if (exp%2 == 0) {
+
+  }
+}
 
 /** Decrypts the specified file and writes the decrypted contents into the provided
  * outputPath. Read more: https://geshan.com.np/blog/2021/10/nodejs-read-file-line-by-line/
  */
 function decryptFile(filePath, encryptionPath, outputPath = "./") {
-  binary = fs.readFileSync(filePath);
 
   const rsaJSON = JSON.parse(fs.readFileSync(encryptionPath));
   const rsaPrivateKey = BigInt(rsaJSON["private-key"]);
   const rsaN = BigInt(rsaJSON["public-key-N"]);
 
+  const binary = fs.readFileSync(filePath, 'utf-8');
+
+
+  binary.split(/\s+/).forEach(line => {
+    if (line) {
+      let d = BigInt(line) 
+      for (let i = 0; i < (rsaPrivateKey - BigInt(1)); ++i) {
+        d = d*d
+        d = d % rsaN
+      }
+      console.log("Decryption Function: ", line, "Decrypted: ", d)
+    }
+  })
+
   console.log("Private Key:", rsaPrivateKey);
   fs.writeFileSync(outputPath, "");
 
-  for (let i of binary.entries()) {
-    let d = BigInt(i[1])
-    for (let i = 0; i < (rsaPrivateKey - BigInt(1)); i += 1) {
-      d = d*d
-      d = d % rsaN;
-    }
-    d = d % rsaN
 
-    fs.appendFile(outputPath, d.toString(), () => {console.log("decrypting")});
-  }
+
+  // for (let i of binary.entries()) {
+  //   let d = BigInt(i[1])
+  //   for (let i = 0; i < (rsaPrivateKey - BigInt(1)); i += 1) {
+  //     d = d*d
+  //     d = d % rsaN;
+  //   }
+  //   d = d % rsaN
+
+  //   fs.appendFile(outputPath, d.toString(), () => {console.log("decrypting")});
+ // }
 }
-
+writeRSAKeys();
 exports.generateRSAKeys = generateRSAKeys; 
 exports.extendedGCD = extendedGCD; 
 exports.writeRSAKeys = writeRSAKeys; 

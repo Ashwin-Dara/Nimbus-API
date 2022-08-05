@@ -39,6 +39,13 @@ Things you to need to figure out:
   ```
   - The public key can also be stored with part of the associated file uploaded/user. However, the private key should be kept private.
 
+### Encryption Diagram
+```mermaid
+flowchart LR; 
+text --> compressed --> encrypted --> decrypted --> decompressed --> text
+```
+<br>
+
 ## Data Compression 
 The main algorithm that you will be using is the Huffman coding algorithm. You should be referencing online implementations (don't waste too much time writing it from scratch). Moreover, if possible, you should be trying to parallelize the process of data compression. You should possibly chunk the file into smaller contents and then upload them logarithmatically. You should parallelize the process of uploading somehow. 
 ### Huffman Coding Algorithm 

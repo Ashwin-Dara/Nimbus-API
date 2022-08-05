@@ -1,0 +1,8 @@
+This is going to be a file 
+
+with many new lines.
+
+Let's add special indentation: 
+	- first
+	- second
+	- third

@@ -5,5 +5,5 @@ const rsaPath = path.join('..', '..', 'core', 'rsa')
 
 rsa.generateRsaKeys(rsaPath)
 
-// rsa.encryptFileContents(path.join("../", "test-data-1.txt"), "", path.join("../", "out", "test-util-enc-1.txt")); 
-// rsa.decryptFileContents(path.join("../", "out", "test-util-enc-1.txt"), "", path.join("../", "out", "test-util-dec-1.txt")); 
+rsa.encryptFileContents(path.join("../", "test-data-1.txt"), rsaPath); 
+rsa.decryptFileContents(path.join("../", "test-data-1.txt"), rsaPath); 

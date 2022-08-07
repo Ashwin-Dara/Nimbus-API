@@ -20,7 +20,7 @@ class BitCompressionMap {
    * a JSON-esque format.
    */
   setBitNode(node) {
-    this.decodeMapping.set(Integer(node.getBitString()), node.getCharacter());
+    this.decodeMapping.set(node.getBitString(), node.getCharacter());
   }
 
   /** Returns the JSON representation of the BitCompressionMap.
@@ -83,7 +83,7 @@ class BitNode {
  */
 function getFrequencyCounter(filePath) {
   /* Reading the specified file and converting it into a string. */
-  const data = fs.readSync(filePath).toString();
+  const data = fs.readFileSync(filePath).toString();
 
   /* Object holds the frequency of the different characters. */
   let freq = {};
@@ -111,10 +111,10 @@ function getFreqPQ(freqMap) {
   /* Creating empty priority queue. */
   let pq = [];
 
-  for (const letter in freqMap) {
+  for (let x in freqMap) {
     let node = new BitNode();
-    node.character = letter;
-    node.frequency = freqMap[letter];
+    node.character =  x;
+    node.frequency = freqMap[x];
     pq.push(node);
   }
 
@@ -144,8 +144,8 @@ function getHuffmanTree(prioQ) {
     we want to do this in order to have the nodes with the furthest depth be the ones that show up 
     the least often within our file. The reason for this is that we want to represent letters that 
     show up more frequency with a smaller bit sequence to preserve space. */
-    let parent = BitNode();
-    parent.character = first.getCharacter() + " - " + second.getCharacter();
+    let parent = new BitNode();
+    parent.character = first.getCharacter() + "-" + second.getCharacter();
     parent.frequency = first.getFreq() + second.getFreq();
 
     /* Setting children of parent node appropriately. */
@@ -165,10 +165,30 @@ function getHuffmanTree(prioQ) {
 
 /**
  * Input: Huffman Tree.
- * Output: BitCompressionMap object.
+ * Output: void. 
  *
+ * Side Effects: mutates the entered bitMap.
+ * 
  * Takes in the root of a Huffman tree and converts it into a valid CompressionMap object.
  * The typical workflow for generating a valid compression encoding would first be to read the
  * file, then it would be to
  */
-function getCompressionMap() {}
+function getCompressionMap(root, bitString, bitMap) {
+  if (root == null) {
+    return;
+  }
+  if (root.isLeaf()) {
+    root.bitString = Number(bitString);
+    bitMap.setBitNode(root);
+    return;
+  }
+    getCompressionMap(root.left, bitString + "0", bitMap);
+    getCompressionMap(root.right, bitString + "1", bitMap);
+}
+
+exports.BitCompressionMap = BitCompressionMap; 
+exports.BitNode = BitNode; 
+exports.getFrequencyCounter = getFrequencyCounter; 
+exports.getFreqPQ = getFreqPQ; 
+exports.getHuffmanTree = getHuffmanTree;
+exports.getCompressionMap = getCompressionMap; 

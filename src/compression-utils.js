@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { decode } = require("punycode");
 const huffman = require('./compression')
 
 function generateMaps(filePath, compPath) {
@@ -9,7 +10,6 @@ function generateMaps(filePath, compPath) {
     let name = path.basename(filePath, ext);
     const encPath = path.join(compPath.toString(), name + "-enc-map.json");
     const decPath = path.join(compPath.toString(), name + "-dec-map.json");
-
 
     let bitMap = new huffman.BitCompressionMap(); 
     let freq = huffman.getFrequencyCounter(filePath); 
@@ -49,9 +49,29 @@ function encodeFile(filePath, compPath) {
     console.log(binary);
 }
 
-function decodeFile() {
+function decodeFile(filePath, compPath, decodedPath=0) {
+    let ext = path.extname(filePath);
+    let name = path.basename(filePath, ext);
+    const encodedPath = path.join(compPath, "encodings", name + "-encoded.bin");
 
+    if (decodedPath == 0) {
+        decodedPath = path.join(compPath, "decodings", name + "-decoded.txt");
+    }
+    const decodingMap = JSON.parse(fs.readFileSync(path.join(compPath.toString(), name + "-dec-map.json")));
+    let binData = fs.readFileSync(encodedPath).toString(); 
+    let tempBin = ""
+    let result = "";
+    for (let i=0; i < binData.length; ++i) {
+        tempBin += binData[i]
+        if (decodingMap[tempBin] !== undefined) {
+            result += decodingMap[tempBin];
+            tempBin = "";
+        }
+    }
+    console.log(result);
+    fs.writeFile(decodedPath, result, ()=>{`Decoded the file ${name + ext}!`})
 }
 
 exports.generateMaps = generateMaps; 
 exports.encodeFile = encodeFile;
+exports.decodeFile = decodeFile; 

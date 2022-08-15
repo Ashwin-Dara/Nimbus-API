@@ -13,6 +13,7 @@ class BitCompressionMap {
    */
   constructor() {
     this.decodeMapping = new Map();
+    this.encodeMapping = new Map(); 
   }
 
   /** Adds the node into the BitCompressionMap. Typically, one file will have one single
@@ -21,6 +22,7 @@ class BitCompressionMap {
    */
   setBitNode(node) {
     this.decodeMapping.set(node.getBitString(), node.getCharacter());
+    this.encodeMapping.set(node.getCharacter(), node.getBitString());
     console.log("Bitstring", node.getBitString(), this.decodeMapping.has(node.getBitString()));
   }
 
@@ -31,10 +33,16 @@ class BitCompressionMap {
    *    { A:1010,
    *      B:0001 }
    */
-  getJSON() {
+  getDecodeMap() {
     const obj = Object.fromEntries(this.decodeMapping);
     return obj;
   }
+
+  getEncodeMap() {
+    const obj = Object.fromEntries(this.encodeMapping);
+    return obj;
+  }
+ 
 }
 
 class BitNode {

@@ -2,12 +2,14 @@ const fs = require("fs");
 const path = require("path");
 const huffman = require('./compression')
 
-function encodeFile(filePath, compPath) {
+function generateMaps(filePath, compPath) {
     /* Standard out path for every single file is a folder within
     core that contains all of the compressions. Constructing this out path.*/
     let ext = path.extname(filePath);
     let name = path.basename(filePath, ext);
-    const outPath = path.join(compPath.toString(), name + "-comp$0.json");
+    const encPath = path.join(compPath.toString(), name + "-enc-map.json");
+    const decPath = path.join(compPath.toString(), name + "-dec-map.json");
+
 
     let bitMap = new huffman.BitCompressionMap(); 
     let freq = huffman.getFrequencyCounter(filePath); 
@@ -16,10 +18,40 @@ function encodeFile(filePath, compPath) {
     huffman.generateCompMap(encodingTree, "", bitMap);
 
     /* Storing the compression map within the specified folders in core. */
-    let mapping = bitMap.getJSON()
-    const jsonMap = JSON.stringify(mapping, null, 2);
-    console.log(jsonMap);
-    fs.writeFileSync(outPath, jsonMap)
+    let decodeMapping = bitMap.getDecodeMap();
+    let encodeMapping = bitMap.getEncodeMap(); 
+    const encMapJson = JSON.stringify(encodeMapping, null, 2);
+    const decMapJson = JSON.stringify(decodeMapping, null, 2);
+
+    /** Writing the encoding and the decoding map within the appropriate directories. */
+    fs.writeFileSync(decPath, decMapJson);
+    fs.writeFileSync(encPath, encMapJson);
 }
 
-exports.encodeFile = encodeFile; 
+/** Opens the file specified as a string and uses the encoding map to convert it into a 
+ * binary file in the appropriate path under the core data folder. */
+function encodeFile(filePath, compPath) {
+
+    generateMaps(filePath, compPath);
+
+    let ext = path.extname(filePath);
+    let name = path.basename(filePath, ext);
+    let binary = "";
+    let data = fs.readFileSync(filePath).toString(); 
+    const encodingMap = JSON.parse(fs.readFileSync(path.join(compPath.toString(), name + "-enc-map.json")));
+    
+    for (let i=0; i < data.length; ++i) {
+        binary += encodingMap[data[i]];
+    }
+
+    const outPath = path.join(compPath.toString(), "encodings", name + "-encoded.bin");
+    fs.writeFileSync(outPath, binary);
+    console.log(binary);
+}
+
+function decodeFile() {
+
+}
+
+exports.generateMaps = generateMaps; 
+exports.encodeFile = encodeFile;

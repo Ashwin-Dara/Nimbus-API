@@ -1,4 +1,0 @@
-This is a more complicated file with more information. 
-There are more characters, and there are more new lines. 
-With this, we will be testing for coherence, aka whether or not the data gets preserved after we 
-make an attempt to encrypt it. 

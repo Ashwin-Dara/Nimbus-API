@@ -21,6 +21,7 @@ class BitCompressionMap {
    */
   setBitNode(node) {
     this.decodeMapping.set(node.getBitString(), node.getCharacter());
+    console.log("Bitstring", node.getBitString(), this.decodeMapping.has(node.getBitString()));
   }
 
   /** Returns the JSON representation of the BitCompressionMap.
@@ -31,9 +32,8 @@ class BitCompressionMap {
    *      B:0001 }
    */
   getJSON() {
-    let o = Object.fromEntries(this.decodeMapping);
-    let oJson = JSON.stringify(o);
-    return oJson;
+    const obj = Object.fromEntries(this.decodeMapping);
+    return obj;
   }
 }
 
@@ -45,7 +45,7 @@ class BitNode {
    *  - left and right: children of the tree.
    */
   constructor() {
-    this.bitString = 0;
+    this.bitString = "";
     this.frequency = 0;
     this.character = "";
     this.left = null;
@@ -134,24 +134,19 @@ function getHuffmanTree(prioQ) {
 
   while (prioQ.length > 1) {
     /* Pop the first two elements and then shift the priority queue as appropriate. */
-    let first = prioQ[0];
-    prioQ.shift();
-
-    let second = prioQ[0];
-    prioQ.shift();
+    let first = prioQ.shift();
+    let second = prioQ.shift();
 
     /* Creating the parent BitNode by merging the two node's with the smallest frequency. Typically, 
     we want to do this in order to have the nodes with the furthest depth be the ones that show up 
     the least often within our file. The reason for this is that we want to represent letters that 
     show up more frequency with a smaller bit sequence to preserve space. */
-    let parent = new BitNode();
-    parent.character = first.getCharacter() + "-" + second.getCharacter();
+    const parent = new BitNode();
     parent.frequency = first.getFreq() + second.getFreq();
 
     /* Setting children of parent node appropriately. */
     parent.left = first;
     parent.right = second;
-
     treeRoot = parent;
 
     /* Readding the parent into the priority queue and then re-sorting the priority queue. */
@@ -186,9 +181,22 @@ function getCompressionMap(root, bitString, bitMap) {
     getCompressionMap(root.right, bitString + "1", bitMap);
 }
 
+function generateCompMap(root, bitString, map) {
+  if (root == null) {
+    return; 
+  }
+  if (root.left == null && root.right == null) {
+    root.bitString = bitString;
+    map.setBitNode(root);
+  }
+  generateCompMap(root.left,  bitString + "0", map);
+  generateCompMap(root.right, bitString + "1", map);
+}
+
 exports.BitCompressionMap = BitCompressionMap; 
 exports.BitNode = BitNode; 
 exports.getFrequencyCounter = getFrequencyCounter; 
 exports.getFreqPQ = getFreqPQ; 
 exports.getHuffmanTree = getHuffmanTree;
+exports.generateCompMap = generateCompMap; 
 exports.getCompressionMap = getCompressionMap; 

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "one-share-demo",
+  "private_key_id": "5ad0d182bd61c808f40317598db8ac1fa9598328",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCvFcE7ozDwRiy2\nPc1ddTORiHYj+2fXXWBeLH3zEom1NXrs6P62mL6N5hOwSdqGFzv+kIxJu4apQFDU\ntge2yB278IGt3Cpt6bsbjAf9pKN3HZ+gR5Dh8qS89/A4WcxalkrbmloDe/l+T2Lf\noMfZfH9EGzXWbEmBPG3+mXDHE5B4y6nfKruVr3/06xIHioD3pU0STzTtKA2/93iW\n9846sVqnPNT/wwmR8nIaQFCzoSublWQxaBkkQjZ4RHpP8WGR4Ur/TuzD05rYbGfT\nkzWnWC/VfBPIj5cPqCw5MJRVYsslBcuCf22zNc14WSv2ScJ7th0fcArn8QBDQBud\nOwppt6qRAgMBAAECggEAE0XDxXrLMkenOFBJQNZb3NM2nfNYlN5Uc0lWe+E4g1fl\nthpXn2Xk493FoQwgH86C7hyfNKaNxiesPh3jb31LuJpay/aGPR8TV47sekEbNUtv\nfMcj7Zs2Aw8PxEQuOHJ+vvmYmvWUmxDGA3PBS/FmWOrd3EKDPNSYDwR445EFwCYL\n29F6ca40ED9b6WGBfoX4kk4+PCLTE4jayB2wfVmlRfDLjQiS7Aj1oylold1rywnK\nC7GmgzOAUdx21TrP+WQSjthyq6lbTR8SxutCv8e87qGAQu8aqXTfO5VEcg3nV3ZY\n+Xc0BTQJZ91ubAd3rYRGr4UvK74inJk93irb0LbkeQKBgQD3JJGO/hjtFKf5/Rs5\ncgX56KNJMKaSkJvgZWhpXPI5/QvyKSW/WrckvrH60Tl8wbPEqPRnu6zMmPKIf/pH\nJciHIN0p523+QKA5sblt+nIadxKFPolXsFyupLg5ynACAXR0tJSmpp7SYdpmjzRz\nK0/PL3zdi7oMDQex6XxUjZXzrwKBgQC1XBXvg58rqkWkruZphF0jmdnkaaR/tus7\nnDdLfe2Xxbnh2c3EID2VvvPD2PchvYHFYUkaEEropycNXFzV/zjq8UmbibZYTMQF\nm1r2ew7wTshqilSv6msw6bDrEW4WYVNLB4p8OqY36lH6FXfUtWVf5pYJM7axZmqT\nB4nWBp6VvwKBgQDe5CoqzlvopfKA8Zb2DjH5m6h4P9pa4PTUQmESdXM4fVGiyx1y\nIPx/tUSLMtsn+wKIYOBcFdTYiTBjjxhHxnm99RPB0SlQXzSiE/lqiK8T00Puy+HO\nJg7Qq1pDNKIkDO/cuWg/jJI8p2fzi0AAhpVqBCgXHwdiCvZfrHYnQ7JznQKBgFpx\nePMAVeGlwaN2IawfeX9mm3ZAhOu4IimRJzY7r8BPt/p87xPO7EeAefqCegRWiKAR\ney5HT8Qkj+Im3JlP9WedOxMZI1l3tw4AwuVGy1VmRKZ1I/Sy2BAFitg/0gHROYOi\nWBrJ+NjLv2QTTrZCXDLuQIaIRqTDqYR3bvLQTEfrAoGAFkHVs9D/Qro8ANgpEyDP\ngxvanvbNRPHF1s7d0kRiL9Z5lv/NCFb/VEaflzw5PQ2Rf5APOvr0kz0N0jqgAnwZ\nL77P48FthJC8xsnIbG20a11LuuxMySkHcTOi5Wgx9oSKIdq8+6/gT3q3ldknUq30\ngcL3+56xkGEBWWDX/2YUVRA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "gcs-oneshare@one-share-demo.iam.gserviceaccount.com",
+  "client_id": "109643860316058621509",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/gcs-oneshare%40one-share-demo.iam.gserviceaccount.com"
+}

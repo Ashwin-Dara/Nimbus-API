@@ -1,0 +1,26 @@
+Push: 
+	Check for Auth -> Compress the file -> Encrypt the file -> Send it to Google Storage
+	
+	Parameters:	
+		- File Name
+		- Directory Name	
+
+Pull File
+	Check for Auth -> Pull File Name into specified directory
+	
+	Parameters:
+		- File Name 
+		- Directory Name
+
+LS 
+	Checks for Auth -> Lists All Pushed Files in Storage
+
+
+Authentication
+	- Happens before every command
+	- Type in a "group" and password 
+
+Create Group: 
+	- Creates new folder in the google storage
+	- there is a passphrase associated with the group
+	

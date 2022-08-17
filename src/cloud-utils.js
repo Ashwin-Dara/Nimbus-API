@@ -62,20 +62,25 @@ async function listFiles(bucketName) {
  * and will store the hash of this password within the database.*/
 async function createBucket(bucketName) {
 
+  /* Creating a new bucket document to store within the db.*/
   const bucket = new BucketSchema.BucketDocument();
   bucket.name = bucketName; 
 
+  /* Password will have to match twice. If it doesn't, there is a typo. */
   const pass = prompt("Enter a password associated with this bucket:");
   const pass2 = prompt("Re-type your password to confirm it:");
   
+  /* If two passwords don't match.*/
   if (pass2 !== pass) {
     console.log("The passwords don't match.");
     return; 
   }
 
+  /* Generating default random salt and adding to hash. */
   const salt = await bcrypt.genSalt(10);
   bucket.authHash = await bcrypt.hash(pass, salt);
   
+  /* Creating bucket on cloud and storing bucket name in db. */
   await storage.createBucket(bucketName);
   bucket.save().catch(err => console.log(err)); 
   console.log(`Bucket ${bucketName} created and password configured!`);
@@ -88,7 +93,7 @@ async function retrieveFile(bucket, fileName, outPath) {
     destination: outPath.toString(),
   };
   await storage.bucket(bucket).file(fileName).download(settings);
-  /* Printing success status. */
+  /* Printing status.*/
   console.log(`Successfully retrieved the file ${fileName}!`);
 }
 

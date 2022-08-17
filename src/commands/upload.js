@@ -1,5 +1,11 @@
-const CloudUtils = require('../cloud-utils')
+const path = require('path');
 const bcrypt = require("bcrypt");
+const CloudUtils = require('../cloud-utils')
+const RSA = require('../encryption-utils');
+const Compression = require('../compression-utils');
+const rsaPath = path.join('..', 'core', 'rsa');
+const compPath = path.join('..', 'core', 'compression');
+
 
 export default (bucketName, path, options) => {
     const login = prompt("Enter the password for this bucket:");
@@ -7,7 +13,12 @@ export default (bucketName, path, options) => {
     if (bucket) {
         const valid = await bcrypt.compare(login, bucket.authHash);
         if (valid) {
-            CloudUtils.pushFile(bucketName, path);
+            let ext = path.extname(path);
+            let name = path.basename(path, ext); 
+            const compressedPath = path.join(compPath.toString(), "encodings", name + "-encoded.bin");
+            Compression.encodeFile(path, compPath);
+            RSA.encryptFileContents(compressedPath, rsaPath);
+            CloudUtils.pushFile(path.join(rsaPath, "encryptions", name + "-enc-$0.txt").toString(), path);
             return;
         }
         else {

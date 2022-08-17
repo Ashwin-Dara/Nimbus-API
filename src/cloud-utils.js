@@ -49,7 +49,7 @@ async function listBuckets() {
 /** Lists all of the files within the particular bucket. 
  * This function requires a password in order to check whether or not the 
  * user is able to view into the files within that bucket. */
-async function listFiles(bucketName, pass) {
+async function listFiles(bucketName) {
   FileSchema.find({ bucket: bucketName })
     .then((result) => {
       console.log(result.name);
@@ -61,13 +61,12 @@ async function listFiles(bucketName, pass) {
  * Will prompt the user to enter in a password to be associated with the bucket
  * and will store the hash of this password within the database.*/
 async function createBucket(bucketName) {
-  let login = "";
 
   const bucket = new BucketSchema.BucketDocument();
   bucket.name = bucketName; 
 
   const pass = prompt("Enter a password associated with this bucket:");
-  const pass2 = prompt("Confirm the password: ");
+  const pass2 = prompt("Re-type your password to confirm it:");
   
   if (pass2 !== pass) {
     console.log("The passwords don't match.");
@@ -124,3 +123,9 @@ async function pushFile(bucket, filePath) {
     `Successfully uploaded the file ${filePath.toString()} as ${name}!`
   );
 }
+
+exports.listBuckets = listBuckets;
+exports.listFiles = listFiles; 
+exports.createBucket = createBucket;
+exports.retrieveFile = retrieveFile; 
+exports.pushFile = pushFile;

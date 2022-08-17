@@ -1,9 +1,11 @@
 const fs = require("fs");
 const path = require("path");
-const { Storage } = require("@google-cloud/storage");
-const FileSchema = require("./file-schema");
-const GCS_PRIVATE = require("./private-key");
 const mongoose = require("mongoose");
+const { Storage } = require("@google-cloud/storage");
+const GCS_PRIVATE = require("./private-key");
+const FileSchema = require("./file-model");
+const BucketSchema = require('./bucket-model');
+
 
 /* Setting up the MongoDB Atlas database and connecting to the database. */
 const DB_URI = "placeholder-mongodb-uri";
@@ -55,6 +57,9 @@ async function listFiles(bucketName, pass) {
 
 /** Creates a bucket within the storage name. Equivalent of a "group". */
 async function createBucket(bucketName) {
+  
+  const bucket = new BucketSchema.BucketDocument({name: bucketName.toString()});
+
   await storage.createBucket(bucketName);
   console.log(`Bucket ${bucketName} created.`);
 }

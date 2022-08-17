@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
+const prompt = require('prompt-sync')();
+const bcrypt = require("bcrypt");
 const { Storage } = require("@google-cloud/storage");
 const GCS_PRIVATE = require("./private-key");
 const FileSchema = require("./file-model");
@@ -55,13 +57,29 @@ async function listFiles(bucketName, pass) {
     .catch((err) => console.log(err));
 }
 
-/** Creates a bucket within the storage name. Equivalent of a "group". */
+/** Creates a bucket within the storage name. Equivalent of a "group". 
+ * Will prompt the user to enter in a password to be associated with the bucket
+ * and will store the hash of this password within the database.*/
 async function createBucket(bucketName) {
-  
-  const bucket = new BucketSchema.BucketDocument({name: bucketName.toString()});
+  let login = "";
 
+  const bucket = new BucketSchema.BucketDocument();
+  bucket.name = bucketName; 
+
+  const pass = prompt("Enter a password associated with this bucket:");
+  const pass2 = prompt("Confirm the password: ");
+  
+  if (pass2 !== pass) {
+    console.log("The passwords don't match.");
+    return; 
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  bucket.authHash = await bcrypt.hash(pass, salt);
+  
   await storage.createBucket(bucketName);
-  console.log(`Bucket ${bucketName} created.`);
+  bucket.save().catch(err => console.log(err)); 
+  console.log(`Bucket ${bucketName} created and password configured!`);
 }
 
 /** Pulls the specified file with "fileName" from the appropriate bucket and
@@ -75,7 +93,10 @@ async function retrieveFile(bucket, fileName, outPath) {
   console.log(`Successfully retrieved the file ${fileName}!`);
 }
 
-/** Pushes the specified filePath into the specified bucket or "group". */
+/** Pushes the specified filePath into the specified bucket or "group". 
+ * Look at the following to see an example of bcrypt auth: 
+ * https://www.loginradius.com/blog/engineering/hashing-user-passwords-using-bcryptjs/
+*/
 async function pushFile(bucket, filePath) {
   /* Making preparations for extracting information about the file
   and storing any relevant meta data. */

@@ -10,9 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/storage": "^6.4.1",
+    "bcryptjs": "^2.4.3",
     "bigint-crypto-utils": "^3.0.24",
     "express": "^4.18.1",
     "mongoose": "^6.5.2",
-    "paralleljs": "^1.1.0"
+    "paralleljs": "^1.1.0",
+    "prompt-sync": "^4.2.0"
   }
 }

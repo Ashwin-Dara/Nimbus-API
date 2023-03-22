@@ -1,4 +1,4 @@
-# One-Share 🌨️ - Cloud Creation Software
+# One-Share - Simplified Cloud API
 [![issues](https://img.shields.io/github/issues/ashwin-dara/one-share.svg?style=flat)](https://github.com/Ashwin-Dara/One-Share/issues)
 [![npm package](https://img.shields.io/badge/npm%20package-8.11.0-brightgreen)](https://github.com/Ashwin-Dara/One-Share)
 [![dependencies](https://img.shields.io/badge/dependencies-up--to--date-blue)](https://github.com/Ashwin-Dara/One-Share/blob/master/package.json)
